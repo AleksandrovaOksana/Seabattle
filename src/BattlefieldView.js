@@ -64,6 +64,16 @@ class BattlefieldView extends Battlefield {
             return false
         }
         this.dock.append(ship.div)
+
+        if (ship.placed) {
+        } else {
+            ship.div.style.left = `${ship.startX}px`
+            ship.div.style.top = `${ship.startY}px`
+        }
         return true
+    }
+
+    isUnder(point) {
+        return isUnderPoint(point, this.root)
     }
 }

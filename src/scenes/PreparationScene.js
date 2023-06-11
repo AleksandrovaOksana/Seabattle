@@ -11,6 +11,9 @@ const shipDatas = [
     { size: 1, direction: "row", startX: 145, startY: 480 },
 ]
 class PreparationScene extends Scene {
+    draggedShip = null
+    draggedOffsetX = 0
+    draggedOffsetY = 0
     init() {
         const {player} = this.app
         for (const {size, direction, startX, startY} of shipDatas) {
@@ -22,7 +25,30 @@ class PreparationScene extends Scene {
         console.log("PreparationScene start")
     }
     update() {
-        console.log("PreparationScene update")
+        const {mouse, player} = this.app
+        // Хотим начать тянуть корабль
+        if (!this.draggedShip && mouse.left && !mouse.pLeft) {
+            const ship = player.ships.find((ship) => ship.isUnder(mouse))
+
+            if(ship) {
+                const shipRect = ship.div.getBoundingClientRect()
+                this.draggedOffsetX = mouse.x - shipRect.left
+                this.draggedOffsetY = mouse.y - shipRect.top
+                this.draggedShip = ship
+            }
+        }
+        // Перетаскивание
+        if(mouse.left && this.draggedShip) {
+            const {left, top} = player.root.getBoundingClientRect()
+            const x = mouse.x - left - this.draggedOffsetX
+            const y = mouse.y - top - this.draggedOffsetY
+            this.draggedShip.div.style.left = `${x}px`
+            this.draggedShip.div.style.top = `${y}px`
+        }
+    //     Бросание
+        if(!mouse.left && this.draggedShip) {
+            this.draggedShip = null
+        }
     }
     stop() {
         console.log("PreparationScene stop")
