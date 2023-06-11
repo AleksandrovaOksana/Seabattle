@@ -59,7 +59,7 @@ class BattlefieldView extends Battlefield {
             cell.append(marker)
         }
     }
-    sddShip(ship) {
+    addShip(ship) {
         if (!super.addShip(ship)) {
             return false
         }

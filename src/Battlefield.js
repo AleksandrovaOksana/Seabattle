@@ -3,7 +3,6 @@ class Battlefield {
     shots = []
 
     addShip (ship) {
-        console.log(ship)
         if(this.ships.includes(ship)) {
             return false
         }

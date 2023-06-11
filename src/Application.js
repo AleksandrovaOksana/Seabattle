@@ -24,27 +24,31 @@ class Application {
         requestAnimationFrame(() => this.tick())
     }
     tick () {
-        requestAnimationFrame(() => this.tick)
+        requestAnimationFrame(() => this.tick())
         if (this.activeScene) {
             this.activeScene.update()
         }
         this.mouse.tick()
     }
+
     start(sceneName) {
         if (this.activeScene && this.activeScene.name === sceneName) {
-            return false
+            return false;
         }
-        if (!this.scenes.hasOwnProperty(sceneName)) {
-            return  false
-        }
-        if (this.activeScene) {
-            this.activeScene.stop()
-        }
-        const scene = this.scenes[sceneName]
-        this.activeScene = scene
-        scene.start()
 
-        return true
+        if (!this.scenes.hasOwnProperty(sceneName)) {
+            return false;
+        }
+
+        if (this.activeScene) {
+            this.activeScene.stop();
+        }
+
+        const scene = this.scenes[sceneName];
+        this.activeScene = scene;
+        scene.start();
+
+        return true;
     }
 }
 
