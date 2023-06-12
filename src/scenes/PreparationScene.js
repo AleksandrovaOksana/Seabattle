@@ -22,19 +22,32 @@ class PreparationScene extends Scene {
         }
     }
     start() {
-        console.log("PreparationScene start")
+        const {player} = this.app
+        player.randomize(ShipView)
+
+        for (let i = 0; i < 10; i++) {
+            const ship = player.ships[i]
+
+            ship.startX = shipDatas[i].startX
+            ship.startY = shipDatas[i].startY
+        }
     }
     update() {
-        const {mouse, player} = this.app
-        // Хотим начать тянуть корабль
-        if (!this.draggedShip && mouse.left && !mouse.pLeft) {
-            const ship = player.ships.find((ship) => ship.isUnder(mouse))
+        const { mouse, player } = this.app;
 
-            if(ship) {
-                const shipRect = ship.div.getBoundingClientRect()
-                this.draggedOffsetX = mouse.x - shipRect.left
-                this.draggedOffsetY = mouse.y - shipRect.top
-                this.draggedShip = ship
+        // Потенциально хотим начать тянуть корабль
+        if (!this.draggedShip && mouse.left && !mouse.pLeft) {
+            const ship = player.ships.find((ship) => ship.isUnder(mouse));
+
+            if (ship) {
+                const shipRect = ship.div.getBoundingClientRect();
+
+                this.draggedShip = ship;
+                this.draggedOffsetX = mouse.x - shipRect.left;
+                this.draggedOffsetY = mouse.y - shipRect.top;
+
+                ship.x = null;
+                ship.y = null;
             }
         }
         // Перетаскивание
@@ -46,8 +59,48 @@ class PreparationScene extends Scene {
             this.draggedShip.div.style.top = `${y}px`
         }
     //     Бросание
-        if(!mouse.left && this.draggedShip) {
-            this.draggedShip = null
+        if (!mouse.left && this.draggedShip) {
+            const ship = this.draggedShip;
+            this.draggedShip = null;
+
+            const { left, top } = ship.div.getBoundingClientRect();
+            const { width, height } = player.cells[0][0].getBoundingClientRect();
+
+            const point = {
+                x: left + width / 2,
+                y: top + height / 2,
+            };
+
+            const cell = player.cells
+                .flat()
+                .find((cell) => isUnderPoint(point, cell));
+
+            if (cell) {
+                const x = parseInt(cell.dataset.x);
+                const y = parseInt(cell.dataset.y);
+
+                player.removeShip(ship);
+                player.addShip(ship, x, y);
+            } else {
+                player.removeShip(ship);
+                player.addShip(ship);
+            }
+        }
+    //     Вращение
+        if(this.draggedShip && mouse.delta) {
+            this.draggedShip.toggleDirection()
+        }
+    }
+    randomize() {
+        const { player } = this.app;
+
+        player.randomize(ShipView);
+
+        for (let i = 0; i < 10; i++) {
+            const ship = player.ships[i];
+
+            ship.startX = shipDatas[i].startX;
+            ship.startY = shipDatas[i].startY;
         }
     }
     stop() {
