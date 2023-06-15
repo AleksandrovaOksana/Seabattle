@@ -23,7 +23,7 @@ class PreparationScene extends Scene {
         this.removeEventListeners = []
         document
             .querySelectorAll(".app-actions")
-            .forEach(element => element.classList.add('hidden'))
+            .forEach((element) => element.classList.add('hidden'))
         document
             .querySelector('[data-scene="preparation"]')
             .classList.remove('hidden')
@@ -35,10 +35,10 @@ class PreparationScene extends Scene {
         const hardButton = document.querySelector('[data-computer="hard"]')
 
         this.removeEventListeners.push(
-            addEventListener(manuallyButton.addEventListener, "click", () => this.manually())
+            addEventListener(manuallyButton, "click", () => this.manually())
         )
         this.removeEventListeners.push(
-            addEventListener(randomizeButton.addEventListener, "click", () => this.randomize())
+            addEventListener(randomizeButton, "click", () => this.randomize())
         )
 
         this.removeEventListeners.push(
@@ -154,5 +154,6 @@ class PreparationScene extends Scene {
     }
     startComputer(level) {
         console.log(level)
+        this.app.start("computer")
     }
 }
