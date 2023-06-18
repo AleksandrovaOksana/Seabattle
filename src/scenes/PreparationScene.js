@@ -153,7 +153,6 @@ class PreparationScene extends Scene {
         }
     }
     startComputer(level) {
-        console.log(level)
         this.app.start("computer")
     }
 }
