@@ -56,7 +56,7 @@ class Battlefield {
 
         for (const {x, y} of this.shots) {
             const item = matrix[y][x]
-                .shoted = true
+            item.shoted = true;
 
             if (item.ship) {
                 item.wounded = true
@@ -185,15 +185,16 @@ class Battlefield {
             }
 
             if (killed) {
-                ship.killed = true
+                ship.killed = true;
 
                 for (let i = 0; i < ship.size; i++) {
-                    const cy = ship.y + dy * i
-                    const cx = ship.x + dx * i
+                    const cx = ship.x + dx * i;
+                    const cy = ship.y + dy * i;
 
                     const shot = this.shots.find(
-                        (shot) => shot.x === cx && shot.y === cy)
-                    shot.setVariant("killed")
+                        (shot) => shot.x === cx && shot.y === cy
+                    );
+                    shot.setVariant("killed");
                 }
             }
         }
@@ -210,6 +211,7 @@ class Battlefield {
         this.shots.splice(index, 1)
 
         this.#changed = true
+        return true
     }
 
     removeAllShots() {
