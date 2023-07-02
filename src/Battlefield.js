@@ -5,6 +5,15 @@ class Battlefield {
     #matrix = null
     #changed = true
 
+    get loser () {
+        for (const ship of this.ships) {
+            if(!ship.killed) {
+                return false
+            }
+        }
+        return true
+    }
+
     get matrix() {
         if (!this.#changed) {
             this.#matrix

@@ -20,6 +20,12 @@ class PreparationScene extends Scene {
         this.manually()
     }
     start() {
+        const {player, opponent} = this.app
+
+        opponent.clear()
+        player.removeAllShots()
+        player.ships.forEach((ship) => (ship.killed = false))
+
         this.removeEventListeners = []
         document
             .querySelectorAll(".app-actions")
@@ -53,6 +59,9 @@ class PreparationScene extends Scene {
             addEventListener(hardButton, 'click', () =>
                 this.startComputer('hard'))
         )
+
+
+
     }
     stop() {
         for(const removeEventListener of this.removeEventListeners) {
@@ -153,6 +162,16 @@ class PreparationScene extends Scene {
         }
     }
     startComputer(level) {
-        this.app.start("computer")
+        const matrix = this.app.player.matrix
+        const withoutShipItems = matrix.flat().filter((item) => !item.ship)
+        let untouchables = []
+        if (level === 'simple') {
+        }else if(level === 'middle') {
+            untouchables = getRandomSeveral(withoutShipItems, 20)
+        } else if(level === 'hard') {
+            untouchables = getRandomSeveral(withoutShipItems, 40)
+        }
+
+        this.app.start("computer", untouchables)
     }
 }

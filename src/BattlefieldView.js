@@ -3,10 +3,11 @@ class BattlefieldView extends Battlefield {
     table = null;
     dock = null;
     polygon = null;
+    showShips = true
 
     cells = [];
 
-    constructor() {
+    constructor(showShips = true) {
         super();
 
         const root = document.createElement("div");
@@ -21,7 +22,7 @@ class BattlefieldView extends Battlefield {
         const polygon = document.createElement("div");
         polygon.classList.add("battlefield-polygon");
 
-        Object.assign(this, { root, table, dock, polygon });
+        Object.assign(this, { root, table, dock, polygon, showShips});
         root.append(table, dock, polygon);
 
         for (let y = 0; y < 10; y++) {
@@ -68,20 +69,21 @@ class BattlefieldView extends Battlefield {
         if (!super.addShip(ship, x, y)) {
             return false;
         }
+        if (this.showShips) {
+            this.dock.append(ship.div);
 
-        this.dock.append(ship.div);
+            if (ship.placed) {
+                const cell = this.cells[y][x];
+                const cellRect = cell.getBoundingClientRect();
+                const rootRect = this.root.getBoundingClientRect();
 
-        if (ship.placed) {
-            const cell = this.cells[y][x];
-            const cellRect = cell.getBoundingClientRect();
-            const rootRect = this.root.getBoundingClientRect();
-
-            ship.div.style.left = `${cellRect.left - rootRect.left}px`;
-            ship.div.style.top = `${cellRect.top - rootRect.top}px`;
-        } else {
-            ship.setDirection("row");
-            ship.div.style.left = `${ship.startX}px`;
-            ship.div.style.top = `${ship.startY}px`;
+                ship.div.style.left = `${cellRect.left - rootRect.left}px`;
+                ship.div.style.top = `${cellRect.top - rootRect.top}px`;
+            } else {
+                ship.setDirection("row");
+                ship.div.style.left = `${ship.startX}px`;
+                ship.div.style.top = `${ship.startY}px`;
+            }
         }
 
         return true;
@@ -119,11 +121,11 @@ class BattlefieldView extends Battlefield {
         return true
     }
     removeShot(shot) {
-        if(!super.addShot(shot)) {
+        if(!super.removeShot(shot)) {
             return false
         }
 
-        if(Array.prototype.includes.call(this.polygon, shot.div)) {
+        if(Array.prototype.includes.call(this.polygon.children, shot.div)) {
             shot.div.remove()
         }
 
